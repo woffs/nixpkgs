@@ -37,5 +37,6 @@ stdenv.mkDerivation rec {
     description = "Perl Console Twitter Client";
     homepage    = http://oysttyer.github.io/;
     maintainers = with maintainers; [ woffs ];
+    license = with licenses; [ ffsl ];
   };
 }
