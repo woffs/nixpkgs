@@ -4199,6 +4199,8 @@ with pkgs;
 
   ttylog = callPackage ../tools/misc/ttylog { };
 
+  oysttyer = callPackage ../applications/networking/instant-messengers/oysttyer { };
+
   twitterBootstrap = callPackage ../development/web/twitter-bootstrap {};
   twitterBootstrap3 = callPackage ../development/web/twitter-bootstrap/v3.nix {};
 
