@@ -12,9 +12,7 @@ stdenv.mkDerivation rec {
     sha256 = "186xbzyn35w2j58l68mccj0cnf0wxj93zb7s0r26zj4cppwszn90";
   };
 
-  inherit libpulseaudio;
-
-  buildInputs = [ python3 ];
+  buildInputs = [ python3 libpulseaudio.out ];
 
   installPhase = ''
     mkdir -p $out/bin
@@ -23,7 +21,7 @@ stdenv.mkDerivation rec {
 
   postFixup = ''
     substituteInPlace "$out/bin/pulsemixer" \
-      --replace "libpulse.so.0" "$libpulseaudio/lib/libpulse.so.0"
+      --replace "libpulse.so.0" "${libpulseaudio}/lib/libpulse.so.0"
   '';
 
   meta = with stdenv.lib; {
