@@ -67,7 +67,7 @@ stdenv.mkDerivation rec {
     description = "Open source multimedia framework, designed for television broadcasting";
     homepage = "https://www.mltframework.org/";
     license = licenses.gpl3;
-    maintainers = [ maintainers.goibhniu ];
+    maintainers = with maintainers; [ goibhniu woffs ];
     platforms = platforms.linux;
     broken = versionAtLeast qtbase.version "5.15";
   };
