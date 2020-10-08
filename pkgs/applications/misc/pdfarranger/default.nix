@@ -1,17 +1,18 @@
 { stdenv, fetchFromGitHub, lib
 , wrapGAppsHook, intltool
 , python3Packages, gtk3, poppler_gi
+, genericUpdater, common-updater-scripts
 }:
 
 python3Packages.buildPythonApplication rec {
   pname = "pdfarranger";
-  version = "1.6.0";
+  version = "1.6.2";
 
   src = fetchFromGitHub {
-    owner = "jeromerobert";
+    owner = pname;
     repo = pname;
     rev = version;
-    sha256 = "03siz4ar6flyvrrgh7hr7sslc6n9x5d9i13lc5rm2qnssd0qdich";
+    sha256 = "1z841mljcn17zh03z2klica4mdca0y4fvqgjml2gikbcdacqi7n0";
   };
 
   nativeBuildInputs = [
@@ -35,6 +36,11 @@ python3Packages.buildPythonApplication rec {
   strictDeps = false;
 
   doCheck = false; # no tests
+
+  passthru.updateScript = genericUpdater {
+    inherit pname version;
+    versionLister = "${common-updater-scripts}/bin/list-git-tags ${src.meta.homepage}";
+  };
 
   meta = with lib; {
     inherit (src.meta) homepage;
