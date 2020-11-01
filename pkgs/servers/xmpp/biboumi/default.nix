@@ -1,13 +1,30 @@
-{ stdenv, fetchurl, fetchgit, cmake, libuuid, expat, sqlite, libidn,
-  libiconv, botan2, systemd, pkgconfig, udns, pandoc, coreutils } :
+{ stdenv
+, fetchurl
+, fetchgit
+, cmake
+, libuuid
+, expat
+, sqlite
+, libidn
+, libiconv
+, botan2
+, systemd
+, pkgconfig
+, udns
+, pandoc
+, coreutils
+, python3Packages
+, genericUpdater
+, common-updater-scripts
+}:
 
 stdenv.mkDerivation rec {
   pname = "biboumi";
-  version = "8.5";
+  version = "9.0";
 
   src = fetchurl {
     url = "https://git.louiz.org/biboumi/snapshot/biboumi-${version}.tar.xz";
-    sha256 = "0rn9p99iqdyvxjzjq9w0ra7pkk0mngjy65nlg3hqfdw8kq9mv5qf";
+    sha256 = "1jvygri165aknmvlinx3jb8cclny6cxdykjf8dp0a3l3228rmzqy";
   };
 
   louiz_catch = fetchgit {
@@ -18,17 +35,41 @@ stdenv.mkDerivation rec {
 
   patches = [ ./catch.patch ];
 
-  nativeBuildInputs = [ cmake pkgconfig pandoc ];
-  buildInputs = [ libuuid expat sqlite libiconv libidn botan2 systemd
-    udns ];
+  nativeBuildInputs = [
+    cmake
+    pkgconfig
+    pandoc
+    python3Packages.sphinx
+  ];
+
+  buildInputs = [
+    libuuid
+    expat
+    sqlite
+    libiconv
+    libidn
+    botan2
+    systemd
+    udns
+  ];
 
   preConfigure = ''
     substituteInPlace CMakeLists.txt --replace /etc/biboumi $out/etc/biboumi
-    cp $louiz_catch/single_include/catch.hpp tests/
+    cp ${louiz_catch}/single_include/catch.hpp tests/
+  '';
+
+  postBuild = ''
+    make man SPHINXBUILD=sphinx-build
   '';
 
   enableParallelBuilding = true;
   doCheck = true;
+
+  passthru.updateScript = genericUpdater {
+    inherit pname version;
+    versionLister = "${common-updater-scripts}/bin/list-git-tags https://git.louiz.org/biboumi/";
+    ignoredVersions = ".-rc";
+  };
 
   meta = with stdenv.lib; {
     description = "Modern XMPP IRC gateway";
