@@ -25,13 +25,13 @@ assert lib.versionAtLeast mlt.version "6.24.0";
 
 mkDerivation rec {
   pname = "shotcut";
-  version = "21.03.21";
+  version = "21.08.29";
 
   src = fetchFromGitHub {
     owner = "mltframework";
     repo = "shotcut";
     rev = "v${version}";
-    sha256 = "UdeHbNkJ0U9FeTmpbcU4JxiyIHkrlC8ErhtY6zdCZEk=";
+    sha256 = "0lj3ini0fymvcwxk8l1l8ms5519n5n87gdvh0yfhilwp0zqyqkc6";
   };
 
   nativeBuildInputs = [ pkg-config qmake ];
