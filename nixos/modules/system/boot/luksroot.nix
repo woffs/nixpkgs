@@ -434,7 +434,7 @@ let
           echo "Please move your mouse to create needed randomness."
         ''}
           echo "Waiting for your FIDO2 device..."
-          fido2luks open${optionalString dev.allowDiscards " --allow-discards"} ${dev.device} ${dev.name} "${builtins.concatStringsSep "," fido2luksCredentials}" --await-dev ${toString dev.fido2.gracePeriod} --salt string:$passphrase
+          fido2luks${optionalString dev.fido2.askForPIN " -i"} open${optionalString dev.allowDiscards " --allow-discards"}${optionalString dev.fido2.askForPIN " -P"} ${dev.device} ${dev.name} "${builtins.concatStringsSep "," fido2luksCredentials}" --await-dev ${toString dev.fido2.gracePeriod} --salt string:$passphrase
         if [ $? -ne 0 ]; then
           echo "No FIDO2 key found, falling back to normal open procedure"
           open_normally
@@ -722,6 +722,17 @@ in
                 Enable only when your device is PIN protected, such as [Trezor](https://trezor.io/).
               '';
             };
+
+            askForPIN = mkOption {
+              default = false;
+              type = types.bool;
+              description = lib.mdDoc ''
+                Whether to ask for a PIN when unlocking
+
+                Needed e.g. for Yubikey 5.
+              '';
+            };
+
           };
 
           yubikey = mkOption {
